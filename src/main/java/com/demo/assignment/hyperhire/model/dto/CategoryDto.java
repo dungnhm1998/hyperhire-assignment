@@ -24,7 +24,7 @@ public class CategoryDto {
     private int position;
     private Date createAt;
 
-    public static CategoryDto fromCategory(Category entity) {
+    public static CategoryDto fromEntity(Category entity) {
         return CategoryDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -34,9 +34,9 @@ public class CategoryDto {
                 .build();
     }
 
-    public static List<CategoryDto> fromCategories(List<Category> entities) {
+    public static List<CategoryDto> fromEntities(List<Category> entities) {
 
-        return entities.stream().map(CategoryDto::fromCategory).collect(Collectors.toList());
+        return entities.stream().map(CategoryDto::fromEntity).collect(Collectors.toList());
 
     }
 }

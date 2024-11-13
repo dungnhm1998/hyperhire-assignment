@@ -20,7 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getCategories() {
         List<Category> categories = categoryRepository.findAllByStatusOrderByPositionAsc(StatePool.AVAILABLE.getCode());
 
-        return CategoryDto.fromCategories(categories);
+        return CategoryDto.fromEntities(categories);
     }
 
 }
