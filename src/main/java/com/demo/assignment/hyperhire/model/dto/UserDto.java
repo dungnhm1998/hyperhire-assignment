@@ -16,11 +16,11 @@ public class UserDto {
     private String email;
     private String name;
 
-    public static UserDto fromUser(User user) {
+    public static UserDto fromEntity(User entity) {
         return UserDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
+                .id(entity.getId())
+                .email(entity.getEmail())
+                .name(entity.getName())
                 .build();
     }
 }

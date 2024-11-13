@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
                 .orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_USER));
 
-        return UserDto.fromUser(user);
+        return UserDto.fromEntity(user);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class UserServiceImpl implements UserService {
         newUser.setName(request.getName());
         userRepository.save(newUser);
 
-        return UserDto.fromUser(newUser);
+        return UserDto.fromEntity(newUser);
     }
 }
