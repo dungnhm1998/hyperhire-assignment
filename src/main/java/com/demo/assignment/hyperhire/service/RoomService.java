@@ -12,4 +12,6 @@ import java.util.List;
 public interface RoomService {
 
     public Pagination<RoomDto> searchRooms(SearchDto searchDto);
+
+    public RoomDto getRoomDetail(Long id);
 }

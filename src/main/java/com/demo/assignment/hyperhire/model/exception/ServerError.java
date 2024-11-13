@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ServerError {
 
+    public static final ServerError INTERNAL_SERVER_ERRROR = new ServerError(50500, "Oops !!! Something went wrong, please try again later!");
     public static final ServerError NOT_FOUND_USER = new ServerError(10400,"Invalid user name or password");
     public static final ServerError USER_EXISTED = new ServerError(10401,"Email already exists");
-    public static final ServerError INTERNAL_SERVER_ERRROR = new ServerError(50500, "Oops !!! Something went wrong, please try again later!");
+    public static final ServerError NOT_FOUND_ROOM = new ServerError(10402,"Cannot find room. Please try again");
 
     @JsonProperty(value = "server_code")
     private int serverCode;

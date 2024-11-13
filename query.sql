@@ -50,19 +50,21 @@ CREATE SEQUENCE category_SEQ
     START WITH 1
     INCREMENT BY 1;
 
+drop table mockup;
 create table mockup
 (
     id   VARCHAR2(32) PRIMARY KEY,
     type VARCHAR2(10)  NOT NULL,
+    room_id number  NOT NULL,
     url  VARCHAR2(500) NOT NULL
 );
-
-create table room_mockup
-(
-    id        VARCHAR2(32) PRIMARY KEY,
-    room_id   number,
-    mockup_id VARCHAR2(32)
-);
+-- drop table room_mockup;
+-- create table room_mockup
+-- (
+--     id        VARCHAR2(32) PRIMARY KEY,
+--     room_id   number,
+--     mockup_id VARCHAR2(32)
+-- );
 
 create table reservation
 (

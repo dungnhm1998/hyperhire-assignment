@@ -24,11 +24,11 @@ public class Room {
     private String state;
     private String country;
     @Column(name = "interior_bed")
-    private int interiorBed;
+    private Integer interiorBed;
     @Column(name = "interior_room")
-    private int interiorRoom;
+    private Integer interiorRoom;
     @Column(name = "interior_bathroom")
-    private int interiorBathroom;
+    private Integer interiorBathroom;
     @Column(name = "point")
     private String point;
     @Column(name = "price")

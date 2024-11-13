@@ -22,11 +22,11 @@ public class RoomDto {
     private String state;
     private String country;
     @JsonProperty(value = "interior_bed")
-    private int interiorBed;
+    private Integer interiorBed;
     @JsonProperty(value = "interior_room")
-    private int interiorRoom;
+    private Integer interiorRoom;
     @JsonProperty(value = "interior_bathroom")
-    private int interiorBathroom;
+    private Integer interiorBathroom;
     @JsonProperty(value = "point")
     private String point;
     @JsonProperty(value = "price")
@@ -47,6 +47,9 @@ public class RoomDto {
     @JsonProperty(value = "update_at")
     private Date updateAt;
 
+    //more detail info
+    private List<MockupDto> mockupDtos;
+
     public static RoomDto fromEntity(Room entity) {
         return RoomDto.builder()
                 .id(entity.getId())
@@ -58,6 +61,7 @@ public class RoomDto {
                 .interiorBathroom(entity.getInteriorBathroom())
                 .point(entity.getPoint())
                 .price(entity.getPrice())
+                .currency(entity.getCurrency())
                 .owner(entity.getOwner())
                 .shortDesc(entity.getShortDesc())
                 .longDesc(entity.getLongDesc())
@@ -71,8 +75,6 @@ public class RoomDto {
     }
 
     public static List<RoomDto> fromEntities(List<Room> entities) {
-
         return entities.stream().map(RoomDto::fromEntity).collect(Collectors.toList());
-
     }
 }
