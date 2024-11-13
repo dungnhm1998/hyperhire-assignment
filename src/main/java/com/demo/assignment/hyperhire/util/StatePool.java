@@ -1,19 +1,19 @@
 package com.demo.assignment.hyperhire.util;
 
 public enum StatePool {
-    DELETED(-1, "deleted"),
-    AVAILABLE(1, "available"),
-    SOLD_OUT(0, "sold out");
+    DELETED("deleted", "deleted"),
+    AVAILABLE("available", "available"),
+    SOLD_OUT("sold_out", "sold out");
 
-    private int code;
+    private String code;
     private String value;
 
-    StatePool(int code, String value) {
+    StatePool(String code, String value) {
         this.code = code;
         this.value = value;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 

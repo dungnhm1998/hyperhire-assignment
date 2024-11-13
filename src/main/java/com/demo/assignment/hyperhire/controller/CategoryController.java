@@ -21,6 +21,6 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
-    
+
 
 }

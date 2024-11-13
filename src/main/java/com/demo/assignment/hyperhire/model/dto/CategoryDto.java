@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.security.Timestamp;
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ public class CategoryDto {
                 .name(entity.getName())
                 .status(entity.getStatus())
                 .position(entity.getPosition())
+                .createAt(new Date(entity.getCreateAt().getTime()))
                 .build();
     }
 
