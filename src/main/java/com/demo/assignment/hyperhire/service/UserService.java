@@ -9,4 +9,5 @@ public interface UserService {
 
     public UserDto login(LoginRequest email);
 
+    public UserDto register(LoginRequest request);
 }

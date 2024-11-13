@@ -19,4 +19,10 @@ public class UserController {
         return userService.login(request);
     }
 
+
+    @PostMapping(value = "/register")
+    public UserDto register(@RequestBody LoginRequest request){
+        return userService.register(request);
+    }
+
 }
