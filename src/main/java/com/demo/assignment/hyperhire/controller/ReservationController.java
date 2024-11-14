@@ -45,4 +45,8 @@ public class ReservationController {
         return reservationService.cancelReservation(id);
     }
 
+    @PatchMapping("/{id}/{action}")
+    public ReservationDto confirmReservation(@PathVariable(name = "id") Long id, @PathVariable(name = "action") String action) {
+        return reservationService.confirmOrDenyReservation(id, action);
+    }
 }

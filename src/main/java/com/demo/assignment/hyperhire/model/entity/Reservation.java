@@ -35,6 +35,8 @@ public class Reservation {
     private String price;
     private String tax;
     private String discount;
+    @Column(name = "is_confirmed")
+    private Integer isConfirmed;
     @Column(name = "extra_fee")
     private String extraFee;
     @Column(name = "guest_children")
@@ -82,5 +84,9 @@ public class Reservation {
                 .status(reservationDto.getStatus())
                 .createAt(reservationDto.getCreateAt())
                 .build();
+    }
+
+    public boolean isConfirmed() {
+        return this.isConfirmed != null && 1 == this.isConfirmed;
     }
 }

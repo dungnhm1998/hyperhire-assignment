@@ -1,14 +1,13 @@
 package com.demo.assignment.hyperhire.model.dto;
 
-import com.demo.assignment.hyperhire.model.entity.Mockup;
-import com.demo.assignment.hyperhire.model.entity.Payment;
 import com.demo.assignment.hyperhire.model.entity.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +25,10 @@ public class PaymentMethodDto {
                 .method(entity.getMethod())
                 .name(entity.getName())
                 .build();
+    }
+
+    public static List<PaymentMethodDto> fromEntities(List<PaymentMethod> entities) {
+        return entities.stream().map(PaymentMethodDto::fromEntity).collect(Collectors.toList());
     }
 
 }

@@ -4,20 +4,26 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "PAYMENT")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payment {
     @Id
     private String id;
     @Column(name = "reservation_id")
     private Long reservationId;
-    @Column(name = "total_price")
-    private String totalPrice;
+    @Column(name = "total_amount")
+    private String totalAmount;
     @Column(name = "extra_fee")
     private String extraFee;
     @Column(name = "transaction_id")

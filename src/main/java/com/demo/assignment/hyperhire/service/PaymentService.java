@@ -11,13 +11,11 @@ import java.util.List;
 @Component
 public interface PaymentService {
 
-    public List<PaymentMethodDto> getPaymentMethod();
+    public List<PaymentMethodDto> getPaymentMethods();
 
     public PaymentDto createPayment(PaymentRequest request);
 
-    public PaymentDto confirmPayment(Long id);
-
-    public PaymentDto refundPayment(Long id);
+    public PaymentDto refundPayment(String id);
 
     public PaymentDto updatePayment(Long id, PaymentRequest request);
 }

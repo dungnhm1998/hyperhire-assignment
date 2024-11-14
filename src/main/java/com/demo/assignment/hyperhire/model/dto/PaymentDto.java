@@ -16,7 +16,7 @@ public class PaymentDto {
 
     private String id;
     private Long reservationId;
-    private String totalPrice;
+    private String totalAmount;
     private String extraFee;
     private String transactionId;
     private String token;
@@ -30,7 +30,7 @@ public class PaymentDto {
         return PaymentDto.builder()
                 .id(entity.getId())
                 .reservationId(entity.getReservationId())
-                .totalPrice(entity.getTotalPrice())
+                .totalAmount(entity.getTotalAmount())
                 .extraFee(entity.getExtraFee())
                 .method(entity.getMethod())
                 .transactionId(entity.getTransactionId())

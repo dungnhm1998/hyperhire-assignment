@@ -98,7 +98,7 @@ create table reservation
     pay_at          date,
     delete_at       date
 );
-
+alter table reservation add is_confirmed number;
 CREATE SEQUENCE reservation_SEQ
     START WITH 1
     INCREMENT BY 1;
@@ -116,7 +116,7 @@ create table payment
 (
     id             VARCHAR2(32) PRIMARY KEY,
     reservation_id number,
-    total_price    VARCHAR2(20),
+    total_amount    VARCHAR2(20),
     transaction_id VARCHAR2(20),
     token          VARCHAR2(20),
     method         VARCHAR2(20),

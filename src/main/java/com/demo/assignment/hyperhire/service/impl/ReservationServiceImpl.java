@@ -1,14 +1,17 @@
 package com.demo.assignment.hyperhire.service.impl;
 
 import com.demo.assignment.hyperhire.model.dto.ReservationDto;
+import com.demo.assignment.hyperhire.model.entity.Payment;
 import com.demo.assignment.hyperhire.model.entity.Reservation;
 import com.demo.assignment.hyperhire.model.entity.Room;
 import com.demo.assignment.hyperhire.model.exception.BadRequestException;
 import com.demo.assignment.hyperhire.model.exception.ServerError;
 import com.demo.assignment.hyperhire.model.request.ReservationRequest;
+import com.demo.assignment.hyperhire.repository.PaymentRepository;
 import com.demo.assignment.hyperhire.repository.ReservationRepository;
 import com.demo.assignment.hyperhire.repository.RoomRepository;
 import com.demo.assignment.hyperhire.service.ReservationService;
+import com.demo.assignment.hyperhire.util.ActionPool;
 import com.demo.assignment.hyperhire.util.DateTimeUtil;
 import com.demo.assignment.hyperhire.util.StatePool;
 import jakarta.transaction.Transactional;
@@ -23,6 +26,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     @Transactional(rollbackOn = Exception.class)
@@ -30,7 +34,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         ReservationDto reservationDto = calculateReservation(request);
 
-        reservationDto.setStatus(StatePool.AVAILABLE.getCode());
+        reservationDto.setStatus(StatePool.CREATED.getCode());
         reservationDto.setCreateAt(new Date());
 
         Reservation reservation = Reservation.fromDto(reservationDto);
@@ -112,6 +116,37 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUpdateAt(new Date());
         reservationRepository.save(reservation);
 
+        return ReservationDto.fromEntity(reservation);
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public ReservationDto confirmOrDenyReservation(Long id, String action) {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_RESERVATION));
+        String status = reservation.getStatus();
+        Payment payment = paymentRepository.findByReservationId(id).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_PAYMENT));
+
+        if (action.equals(ActionPool.APPROVE.getCode())) {
+            if (payment.getStatus().equals(StatePool.APPROVED.getCode())
+                    && reservation.getStatus().equals(StatePool.PENDING.getCode())) {
+                status = StatePool.APPROVED.getCode();
+            } else {
+                throw new BadRequestException(ServerError.CANNOT_DO_ACTION_ON_RESERVATION);
+            }
+        } else if (action.equals(ActionPool.DENY.getCode())) {
+            if (payment.getStatus().equals(StatePool.APPROVED.getCode())
+                    && reservation.getStatus().equals(StatePool.PENDING.getCode())) {
+                status = StatePool.CANCELLED.getCode();
+            } else {
+                throw new BadRequestException(ServerError.CANNOT_DO_ACTION_ON_RESERVATION);
+            }
+        } else {
+            throw new BadRequestException(ServerError.INVALID_ACTION);
+        }
+
+        reservation.setStatus(status);
+        reservation.setUpdateAt(new Date());
+        reservationRepository.save(reservation);
         return ReservationDto.fromEntity(reservation);
     }
 

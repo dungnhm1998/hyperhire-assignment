@@ -22,8 +22,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping("/methods")
-    public List<PaymentMethodDto> getPaymentMethod() {
-        return paymentService.getPaymentMethod();
+    public List<PaymentMethodDto> getPaymentMethods() {
+        return paymentService.getPaymentMethods();
     }
 
     @PostMapping
@@ -31,14 +31,9 @@ public class PaymentController {
         return paymentService.createPayment(request);
     }
 
-    @PatchMapping("/{id}/confirm")
-    public PaymentDto confirmPayment(@PathVariable(name = "id") Long id) {
-        return paymentService.confirmPayment(id);
-    }
-
     @PatchMapping("/{id}/refund")
-    public PaymentDto updatePayment(@PathVariable(name = "id") Long id) {
-        return paymentService.refundPayment(id);
+    public PaymentDto updatePayment(@PathVariable(name = "id") String transactionId) {
+        return paymentService.refundPayment(transactionId);
     }
 
     @PostMapping("/notify")

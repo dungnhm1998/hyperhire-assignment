@@ -4,8 +4,6 @@ import com.demo.assignment.hyperhire.model.dto.ReservationDto;
 import com.demo.assignment.hyperhire.model.request.ReservationRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public interface ReservationService {
 
@@ -18,4 +16,6 @@ public interface ReservationService {
     public ReservationDto calculateReservation(ReservationRequest request);
 
     public ReservationDto cancelReservation(Long id);
+
+    public ReservationDto confirmOrDenyReservation(Long id, String action);
 }
