@@ -2,53 +2,117 @@ package com.demo.assignment.hyperhire.service.impl;
 
 import com.demo.assignment.hyperhire.model.dto.ReservationDto;
 import com.demo.assignment.hyperhire.model.entity.Reservation;
+import com.demo.assignment.hyperhire.model.entity.Room;
+import com.demo.assignment.hyperhire.model.exception.BadRequestException;
+import com.demo.assignment.hyperhire.model.exception.ServerError;
 import com.demo.assignment.hyperhire.model.request.ReservationRequest;
 import com.demo.assignment.hyperhire.repository.ReservationRepository;
+import com.demo.assignment.hyperhire.repository.RoomRepository;
 import com.demo.assignment.hyperhire.service.ReservationService;
+import com.demo.assignment.hyperhire.util.DateTimeUtil;
 import com.demo.assignment.hyperhire.util.StatePool;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public ReservationDto createReservation(ReservationRequest request) {
 
-        Reservation reservation = new Reservation();
+        ReservationDto reservationDto = calculateReservation(request);
 
-        ReservationDto reservationDto = ReservationDto.fromEntity(reservation);
+        reservationDto.setStatus(StatePool.AVAILABLE.getCode());
+        reservationDto.setCreateAt(new Date());
+
+        Reservation reservation = Reservation.fromDto(reservationDto);
+        reservation = reservationRepository.save(reservation);
+        reservationDto.setId(reservation.getId());
 
         return reservationDto;
     }
 
     @Override
     public ReservationDto getReservation(Long id) {
-        //todo
-        return null;
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_RESERVATION));
+        return ReservationDto.fromEntity(reservation);
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public ReservationDto updateReservation(Long id, ReservationRequest request) {
-        //todo
-        return null;
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_RESERVATION));
+
+        ReservationDto reservationDto = calculateReservation(request);
+        reservationDto.setId(id);
+
+        reservation.setTotalGuest(reservationDto.getTotalGuest());
+        reservation.setTotalPrice(reservationDto.getTotalPrice());
+        reservation.setPrice(reservationDto.getPrice());
+        reservation.setCheckInAt(reservationDto.getCheckInAt());
+        reservation.setCheckOutAt(reservationDto.getCheckOutAt());
+        reservation.setCancelAllowAt(reservationDto.getCancelAllowAt());
+        reservation.setGuestAdult(reservationDto.getGuestAdult());
+        reservation.setGuestChildren(reservationDto.getGuestChildren());
+        reservation.setGuestInfants(reservationDto.getGuestInfants());
+        reservation.setGuestPets(reservationDto.getGuestPets());
+        reservation.setUpdateAt(new Date());
+        reservationRepository.save(reservation);
+
+        return reservationDto;
     }
 
     @Override
     public ReservationDto calculateReservation(ReservationRequest request) {
-        //todo
-        return null;
+
+        Room room = roomRepository.findById(request.getRoomId()).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_ROOM));
+
+        Double roomPrice = Double.valueOf(room.getPrice());
+        long days = DateTimeUtil.getDaysDifference(request.getCheckInAt(), request.getCheckOutAt());
+
+        Double totalPrice = roomPrice * days;
+        Integer totalGuest = request.getGuestAdult() + request.getGuestChildren() + request.getGuestInfants() + request.getGuestPets();
+        Date cancelAllowAt = DateTimeUtil.addDays(request.getCheckOutAt(), 1);
+
+        return ReservationDto.builder()
+                .roomId(request.getRoomId())
+                .checkInAt(DateTimeUtil.convertStringToDate(request.getCheckInAt()))
+                .checkOutAt(DateTimeUtil.convertStringToDate(request.getCheckOutAt()))
+                .guestAdult(request.getGuestAdult())
+                .guestChildren(request.getGuestChildren())
+                .guestInfants(request.getGuestInfants())
+                .guestPets(request.getGuestPets())
+                .totalPrice(String.valueOf(totalPrice))
+                .price(String.valueOf(roomPrice))
+                .totalGuest(totalGuest)
+                .cancelAllowAt(cancelAllowAt)
+                .build();
+
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public ReservationDto cancelReservation(Long id) {
-        //todo
-        return null;
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new BadRequestException(ServerError.NOT_FOUND_RESERVATION));
+
+        Date cancelAllowAt = reservation.getCancelAllowAt();
+        if (new Date().after(cancelAllowAt)) {
+            throw new BadRequestException(ServerError.OVERDUE_ALLOWED_CANCEL_DATE);
+        }
+
+        reservation.setStatus(StatePool.CANCELLED.getCode());
+        reservation.setUpdateAt(new Date());
+        reservationRepository.save(reservation);
+
+        return ReservationDto.fromEntity(reservation);
     }
 
 }

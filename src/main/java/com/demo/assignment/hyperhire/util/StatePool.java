@@ -3,6 +3,7 @@ package com.demo.assignment.hyperhire.util;
 public enum StatePool {
     DELETED("deleted", "deleted"),
     AVAILABLE("available", "available"),
+    CANCELLED("cancelled", "cancelled"),
     SOLD_OUT("sold_out", "sold out");
 
     private String code;

@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReservationController {
 
+    @PostMapping("/calculate")
+    public ReservationDto calculateReservation(ReservationRequest request) {
+        return reservationService.calculateReservation(request);
+    }
+
     private final ReservationService reservationService;
 
     @PostMapping
@@ -33,11 +38,6 @@ public class ReservationController {
     public ReservationDto updateReservation(@PathVariable(name = "id") Long id,
                                             ReservationRequest request) {
         return reservationService.updateReservation(id, request);
-    }
-
-    @PostMapping("/calculate")
-    public ReservationDto calculateReservation(ReservationRequest request) {
-        return reservationService.calculateReservation(request);
     }
 
     @PatchMapping("/{id}/cancel")

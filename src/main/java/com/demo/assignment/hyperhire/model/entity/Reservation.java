@@ -1,5 +1,6 @@
 package com.demo.assignment.hyperhire.model.entity;
 
+import com.demo.assignment.hyperhire.model.dto.ReservationDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,20 +8,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "RESERVATION")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RESERVATION_SEQ")
     @SequenceGenerator(name = "RESERVATION_SEQ", sequenceName = "RESERVATION_SEQ", allocationSize = 1)
     private Long id;
     @Column(name = "room_id")
-    private Integer roomId;
+    private Long roomId;
     @Column(name = "total_price")
     private String totalPrice;
     @Column(name = "total_guest")
@@ -43,9 +50,9 @@ public class Reservation {
     @Column(name = "guest_phone")
     private String guestPhone;
     @Column(name = "check_in")
-    private Date checkIn;
+    private Date checkInAt;
     @Column(name = "check_out")
-    private Date checkOut;
+    private Date checkOutAt;
     @Column(name = "cancel_allow_at")
     private Date cancelAllowAt;
     private String status;
@@ -57,4 +64,23 @@ public class Reservation {
     private Date payAt;
     @Column(name = "delete_at")
     private Date deleteAt;
+
+    public static Reservation fromDto(ReservationDto reservationDto) {
+
+        return Reservation.builder()
+                .roomId(reservationDto.getRoomId())
+                .totalPrice(reservationDto.getTotalPrice())
+                .totalGuest(reservationDto.getTotalGuest())
+                .price(reservationDto.getPrice())
+                .guestAdult(reservationDto.getGuestAdult())
+                .guestChildren(reservationDto.getGuestChildren())
+                .guestInfants(reservationDto.getGuestInfants())
+                .guestPets(reservationDto.getGuestPets())
+                .checkInAt(reservationDto.getCheckInAt())
+                .checkOutAt(reservationDto.getCheckOutAt())
+                .cancelAllowAt(reservationDto.getCancelAllowAt())
+                .status(reservationDto.getStatus())
+                .createAt(reservationDto.getCreateAt())
+                .build();
+    }
 }
